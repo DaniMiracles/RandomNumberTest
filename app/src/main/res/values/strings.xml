@@ -3,4 +3,6 @@
     <string name="get_number">Get Number</string>
     <string name="get_random_number">Get Random Number</string>
     <string name="input_number">Input number</string>
+
+    <string name="empty_string_error_message">Please enter a number</string>
 </resources>
