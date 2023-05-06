@@ -1,5 +1,6 @@
 package com.example.testjunior.main.numbers.domain
 
+import com.example.testjunior.main.numbers.presentation.ManageResources
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
@@ -9,12 +10,17 @@ class NumbersInteractorTest {
 
     private lateinit var repository: TestNumbersRepository
     private lateinit var interactor: NumbersInteractor
+    private lateinit var manageResources: TestManageResources
 
 
     @Before
     fun setUp() {
         repository = TestNumbersRepository()
-        interactor = NumbersInteractor.Base(repository)
+        manageResources = TestManageResources()
+        interactor = NumbersInteractor.Base(
+            repository,
+            HandleRequest.Base(repository, HandleError.Base(manageResources))
+        )
     }
 
     @Test
@@ -43,6 +49,7 @@ class NumbersInteractorTest {
     @Test
     fun test_fact_about_number_error() = runBlocking {
         repository.expectingErrorGetFact(true)
+        manageResources.changeExpected("no internet connection")
         val actual = interactor.factAboutNumber("7")
         val expected = NumbersResult.Failure("no internet connection")
 
@@ -65,6 +72,7 @@ class NumbersInteractorTest {
     @Test
     fun test_fact_about_random_number_error() = runBlocking {
         repository.expectingErrorGetRandomFact(true)
+        manageResources.changeExpected("no internet connection")
 
         val actual = interactor.factAboutRandomNumber()
         val expected = NumbersResult.Failure("no internet connection")
@@ -76,7 +84,7 @@ class NumbersInteractorTest {
 }
 
 
-private class TestNumbersRepository : NumbersRepository() {
+private class TestNumbersRepository : NumbersRepository {
 
     private var numberFact = NumberFact("", "")
     private val allNumbers = mutableListOf<NumberFact>()
@@ -102,28 +110,44 @@ private class TestNumbersRepository : NumbersRepository() {
     fun expectingErrorGetFact(error: Boolean) {
         errorWhileNumberFact = error
     }
+
     fun expectingErrorGetRandomFact(error: Boolean) {
         errorWhileNumberFact = error
     }
 
-    override fun allNumbers(): List<NumberFact> {
+    override suspend fun allNumbers(): List<NumberFact> {
         allNumbersCalledCount++
         return allNumbers
     }
 
-    override fun numberFact(number: String): NumberFact {
+    override suspend fun numberFact(number: String): NumberFact {
         numberFactCalledList.add(number)
         if (errorWhileNumberFact) {
             throw NoInternetConnectionException()
         }
+        allNumbers.add(numberFact)
         return numberFact
     }
 
-    override fun randomNumberFact() : NumberFact{
+    override suspend fun randomNumberFact(): NumberFact {
         randomNumberFactCalledList.add("")
         if (errorWhileNumberFact) {
             throw NoInternetConnectionException()
         }
+        allNumbers.add(numberFact)
         return numberFact
     }
+
+
+}
+
+private class TestManageResources : ManageResources {
+    private var value = ""
+
+    fun changeExpected(string: String) {
+        value = string
+    }
+
+    override fun addString(id: Int): String = value
+
 }

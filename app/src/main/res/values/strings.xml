@@ -5,4 +5,6 @@
     <string name="input_number">Input number</string>
 
     <string name="empty_string_error_message">Please enter a number</string>
+    <string name="noInternetConnection">No Internet Connection</string>
+    <string name="serviceIsUnavailable">Service is unavailable</string>
 </resources>
