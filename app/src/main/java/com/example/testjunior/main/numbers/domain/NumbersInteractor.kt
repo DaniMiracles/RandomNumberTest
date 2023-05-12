@@ -30,7 +30,7 @@ interface HandleRequest {
 
     class Base(
         private val repository: NumbersRepository,
-        private val handleError: HandleError
+        private val handleError: HandleError<String>
     ) : HandleRequest {
 
         override suspend fun handle(block: suspend () -> Unit): NumbersResult {
