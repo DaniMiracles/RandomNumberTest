@@ -36,17 +36,23 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    //Scalars
+    implementation group: 'com.squareup.retrofit2', name: 'converter-scalars', version: '2.9.0'
+
     //Room
     annotationProcessor group: 'androidx.room', name: 'room-compiler', version: '2.6.0-alpha01'
 
     //LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+  //  implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
 
     //Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
@@ -57,4 +63,7 @@ dependencies {
 
     //CoroutineTest
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+
+    //HttpLoggingInterceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }
